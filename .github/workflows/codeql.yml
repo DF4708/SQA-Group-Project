@@ -40,9 +40,9 @@ jobs:
           # Change to 'default' to reduce false positives in production
           queries: security-extended
 
-      # Build the ch13 project — CodeQL captures the build artifacts
+      # Build the ch7 project — CodeQL captures the build artifacts
       - name: Build Bank4Us.Security (ch13)
-        run: dotnet build NaikandTripathy/ch13/Bank4Us.Security/Bank4Us.Security.csproj
+        rrun: dotnet build UqsBlog/UqsBlog.sln --no-restore --configuration Release
 
       # Run the CodeQL analysis and upload SARIF to GitHub
       - name: Perform CodeQL Analysis
