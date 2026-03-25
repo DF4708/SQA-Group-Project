@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./ch10/UqsAppointmentBooking
+        working-directory: .github/src/DF4708 SQA2026_Foster main Class-Files-ch07/UqsBlog
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
