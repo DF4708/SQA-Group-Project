@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <!-- xUnit.net v3 core package for writing tests -->
+    <PackageReference Include="NSubstitute" Version="5.3.0" />
     <PackageReference Include="xunit.v3" Version="3.2.2" />
     <!-- VSTest adapter so 'dotnet test' and VS Test Explorer can discover/run tests -->
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
