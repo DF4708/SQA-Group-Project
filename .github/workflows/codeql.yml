@@ -1,0 +1,55 @@
+# CodeQL Security Analysis — COSC 6055 Week 11 Demo
+# Scans the UqsBlog domain test build for C# security issues.
+# Results appear in GitHub Security → Code scanning alerts.
+
+name: CodeQL Security Scan
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Weekly scan every Monday at 08:00 UTC
+    - cron: '0 8 * * 1'
+
+permissions:
+  security-events: write
+  actions: read
+  contents: read
+
+jobs:
+  analyze:
+    name: Analyze (csharp)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.x'
+
+      # Initialize CodeQL — intercepts the manual build for database creation
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: csharp
+          queries: security-extended
+          build-mode: manual
+
+      # Restore the exact project you build below so project.assets.json exists
+      - name: Restore Uqs.Blog.Domain.Tests
+        run: dotnet restore .github/src/UqsBlog/Uqs.Blog.Domain.Tests/Uqs.Blog.Domain.Tests.csproj
+
+      # Build the specific project you already target — CodeQL captures the build artifacts
+      - name: Build Uqs.Blog.Domain.Tests
+        run: dotnet build .github/src/UqsBlog/Uqs.Blog.Domain.Tests/Uqs.Blog.Domain.Tests.csproj --no-restore --configuration Release
+
+      # Run the CodeQL analysis and upload SARIF to GitHub
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:csharp"
