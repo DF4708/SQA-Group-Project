@@ -111,6 +111,81 @@ public class UpdateTitleServiceTests
             sut.UpdateTitle(postId: 11, title: new string('B', 91)));
     }
 
+    // BVA: ON point — title of exactly 90 characters is accepted
+    // Technique: Boundary Value Analysis
+    // Business Rule: BR4 — Post titles cannot exceed 90 characters
+    [Fact]
+    public void UpdateTitle_Exactly90Chars_IsAccepted()
+    {
+        // Arrange
+        var repo = new FakePostRepository(returnPost: new Post { Id = 5, Title = "Old" });
+        var sut = new UpdateTitleService(repo);
+        var title = new string('a', 90);
+
+        // Act
+        sut.UpdateTitle(postId: 5, title: title);
+
+        // Assert
+        Assert.Equal(title, repo.LastUpdatedPost!.Title);
+        Assert.Equal(1, repo.UpdateCallCount);
+    }
+
+    // BVA: Below ON point — title of exactly 89 characters is accepted
+    // Technique: Boundary Value Analysis
+    // Business Rule: BR4 — Post titles cannot exceed 90 characters
+    [Fact]
+    public void UpdateTitle_Exactly89Chars_IsAccepted()
+    {
+        // Arrange
+        var repo = new FakePostRepository(returnPost: new Post { Id = 6, Title = "Old" });
+        var sut = new UpdateTitleService(repo);
+        var title = new string('a', 89);
+
+        // Act
+        sut.UpdateTitle(postId: 6, title: title);
+
+        // Assert
+        Assert.Equal(title, repo.LastUpdatedPost!.Title);
+        Assert.Equal(1, repo.UpdateCallCount);
+    }
+
+    // Control Flow: Whitespace-only title becomes empty string after trim
+    // Technique: Control Flow Testing
+    // Business Rule: BR6 — Titles are trimmed of whitespace before saving
+    [Fact]
+    public void UpdateTitle_WhitespaceOnly_BecomesEmptyString()
+    {
+        // Arrange
+        var repo = new FakePostRepository(returnPost: new Post { Id = 7, Title = "Old" });
+        var sut = new UpdateTitleService(repo);
+
+        // Act
+        sut.UpdateTitle(postId: 7, title: "     ");
+
+        // Assert
+        Assert.Equal(string.Empty, repo.LastUpdatedPost!.Title);
+        Assert.Equal(1, repo.UpdateCallCount);
+    }
+
+    // BVA: Title over 90 spaces trims to empty — trim happens before length check
+    // Technique: Boundary Value Analysis
+    // Business Rule: BR4, BR6 — Trim applied before length validation
+    [Fact]
+    public void UpdateTitle_Over90Spaces_TrimsToEmptyAndSaves()
+    {
+        // Arrange
+        var repo = new FakePostRepository(returnPost: new Post { Id = 8, Title = "Old" });
+        var sut = new UpdateTitleService(repo);
+        var title = new string(' ', 91);
+
+        // Act
+        sut.UpdateTitle(postId: 8, title: title);
+
+        // Assert
+        Assert.Equal(string.Empty, repo.LastUpdatedPost!.Title);
+        Assert.Equal(1, repo.UpdateCallCount);
+    }
+
     private sealed class FakePostRepository : IPostRepository
     {
         private readonly Post? _returnPost;
