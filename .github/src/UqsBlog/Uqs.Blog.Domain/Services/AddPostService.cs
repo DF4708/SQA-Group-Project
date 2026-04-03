@@ -20,6 +20,16 @@ public class AddPostService : IAddPostService
 
     public int AddPost(int authorId)
     {
-        return 0;
+        var author = _authorRepository.GetById(authorId);
+        if (author is null)
+        {
+            throw new ArgumentException("Author Id not found", nameof(authorId));
+        }
+        if (author.IsLocked)
+        {
+            throw new InvalidOperationException("The author is locked");
+        }
+        var newPostId = _postRepository.CreatePost(authorId);
+        return newPostId;
     }
 }

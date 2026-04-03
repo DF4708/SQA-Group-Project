@@ -13,6 +13,23 @@ public class UpdateTitleService
 
     public void UpdateTitle(int postId, string title)
     {
-        
+        if (title is null)
+        {
+            title = string.Empty;
+        }
+        title = title.Trim();
+        if (title.Length > TITLE_MAX_LENGTH)
+        {
+            throw new ArgumentOutOfRangeException(nameof(title),
+                $"The title can be a max of {TITLE_MAX_LENGTH} letters");
+        }
+        var post = _postRepository.GetById(postId);
+        if (post is null)
+        {
+            throw new ArgumentException($"Unable to find a post of Id {postId}",
+                nameof(post));
+        }
+        post.Title = title;
+        _postRepository.Update(post);
     }
 }
