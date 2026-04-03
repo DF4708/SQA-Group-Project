@@ -55,6 +55,25 @@ public class AddPostServiceTests
         Assert.Equal(9, postRepo.LastCreatePostAuthorId);
     }
 
+    // ECP: Valid partition — unlocked author creates post successfully
+    // Technique: Equivalence Class Partitioning
+    // Business Rule: BR3 — A valid unlocked author can create a post
+    [Fact]
+    public void AddPost_ValidAuthor_UnlockedWithZeroId_ReturnsPostId()
+    {
+        // Arrange
+        var postRepo = new FakePostRepository { CreatePostReturnValue = 77 };
+        var authorRepo = new FakeAuthorRepository(new Author { Id = 5, IsLocked = false });
+        var sut = new AddPostService(postRepo, authorRepo);
+
+        // Act
+        var result = sut.AddPost(authorId: 5);
+
+        // Assert
+        Assert.Equal(77, result);
+        Assert.Equal(1, postRepo.CreatePostCallCount);
+    }
+
     private sealed class FakeAuthorRepository : IAuthorRepository
     {
         private readonly Author? _returnAuthor;
