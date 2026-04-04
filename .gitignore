@@ -29,3 +29,6 @@ reports/
 *.trx
 *.coverage
 *.html
+
+# .NET CLI / telemetry / local cache
+.dotnet/
