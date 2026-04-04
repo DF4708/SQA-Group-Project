@@ -1,0 +1,9 @@
+{
+  "stryker-config": {
+    "solution": "../UqsBlog.sln",
+    "project": "Uqs.Blog.Domain.csproj",
+    "test-runner": "mtp",
+    "reporters": [ "progress", "html", "json" ],
+    "verbosity": "info"
+  }
+}
