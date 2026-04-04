@@ -13,3 +13,19 @@ obj/
 # OS junk
 .DS_Store
 Thumbs.db
+
+# Test results
+TestResults/
+
+# NuGet / restore artifacts
+project.assets.json
+*.nuget.*
+
+# Stryker (mutation testing)
+StrykerOutput/
+reports/
+
+# Coverage / reports
+*.trx
+*.coverage
+*.html
