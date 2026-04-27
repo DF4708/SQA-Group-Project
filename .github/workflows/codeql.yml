@@ -1,5 +1,5 @@
 # CodeQL Security Analysis — COSC 6055 Week 11 Demo
-# Scans the UqsBlog domain test build for C# security issues.
+# Scans the full UqsBlog solution for C# security issues.
 # Results appear in GitHub Security → Code scanning alerts.
 
 name: CodeQL Security Scan
